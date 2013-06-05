@@ -35,8 +35,8 @@ public class SearchImdbActivity extends AbstractFragmentActivity implements Comm
 	private EditText mTitleView;
 	private EditText mYearView;
 	
-	protected void onCreate(Bundle paramBundle){
-		super.onCreate(paramBundle);
+	protected void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.search_imdb_activity);
 
 	    mTitleView = (EditText) findViewById(R.id.title);
@@ -131,7 +131,7 @@ public class SearchImdbActivity extends AbstractFragmentActivity implements Comm
 		}
   }
   
-	public void taskCancelled(AbstractAsyncTask paramAbstractAsyncTask){
+	public void taskCancelled(AbstractAsyncTask task){
 		searchTask = null;
 		showProgress(false);
 	}

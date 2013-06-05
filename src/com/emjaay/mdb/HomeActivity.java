@@ -20,8 +20,8 @@ public class HomeActivity extends AbstractFragmentActivity implements OnPageChan
 	private HomePagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 	
-	protected void onCreate(Bundle paramBundle){
-		super.onCreate(paramBundle);
+	protected void onCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
 		setContentView(R.layout.home_activity);
 				
 		mViewPager = ((ViewPager)findViewById(R.id.pager));

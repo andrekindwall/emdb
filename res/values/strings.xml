@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Maria</string>
+
+    <!-- Common -->
+    <string name="cancel">Cancel</string>
+    <string name="movie">Movie</string>
+    <string name="movies">Movies</string>
+    <string name="series">Series</string>
+    <string name="episode">Episode</string>
+    <string name="episodes">Episodes</string>
+
+    <!-- Common errors -->
+    <string name="error_field_required">This field is required</string>
+    <string name="error_field_numbers_required">Must be a number</string>
+    <string name="could_not_communicate">Problem contacting server</string>
+
+    <!-- Login -->
+    <string name="title_login">Sign in</string>
+    <string name="register">Register</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_confirm_password">Confirm password</string>
+    <string name="action_sign_in_register"><b>Sign in</b> or register</string>
+    <string name="email_doesnt_exists">"Email &lt;b>%1$s&lt;/b> isn't yet registered. You can create it now by confirming your password."</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_wrong_password">Wrong password</string>
+    <string name="error_passwords_missmatch">"Password don't match"</string>
+    <string name="error_email_already_used">Email is already registered</string>
+
+    <!-- Home -->
+    <string name="title_home">Home</string>
+    <string name="no_movies">No movies added</string>
+    <string name="menu_search_movie">Search movie</string>
+
+    <!-- Search movie -->
+    <string name="title_search_movie">Search movie</string>
+    <string name="prompt_movie_title">Title</string>
+    <string name="prompt_movie_year">Year</string>
+    <string name="add_movie_search_button">Search</string>
+
+    <!-- Movie picker -->
+    <string name="title_pick_movie">Choose Movie</string>
+
+    <!-- Detailed movie -->
+    <string name="title_detailed_movie">XXXXXX</string>
+    <string name="fragment_title_detailed_movie">xxxxfragmentxxxxx</string>
+    <string name="fragment_title_copies">My copies</string>
+    <string name="vhs">VHS</string>
+    <string name="dvd">DVD</string>
+    <string name="bluray">Blu-Ray</string>
+    <string name="digital">Digital</string>
+    <string name="add_copy">Add copy</string>
+    <string name="add_another_copy">Add another copy</string>
+
+    <!-- Server -->
+    <string name="baseUrl">http://maria.pigvj.com</string>
+    <string name="api_login">/login.php?email=%1$s&amp;password=%2$s</string>
+    <string name="api_register">/registerUser.php?email=%1$s&amp;password=%2$s</string>
+    <string name="api_imdb_search">http://www.omdbapi.com/?s=%1$s&amp;y=%2$s</string>
+    <string name="api_imdb_detailed_movie">http://www.omdbapi.com/?i=%1$s</string>
+
+</resources>

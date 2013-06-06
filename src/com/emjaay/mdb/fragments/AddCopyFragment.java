@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.emjaay.mdb.R;
+import com.emjaay.mdb.communication.InsertCopyTask;
 import com.emjaay.mdb.data.Copy;
 import com.emjaay.mdb.database.DatabaseHelper;
 
@@ -86,9 +87,14 @@ public class AddCopyFragment extends Fragment implements OnClickListener {
 		}
 	}
 	
-	public void addCopy(Copy copy) {
+	private void addCopyToDatabase(Copy copy) {
 		DatabaseHelper database = new DatabaseHelper(getActivity());
 		database.insertCopy(copy);
+	}
+	
+	private void syncCopyWithServer(Copy copy) {
+		InsertCopyTask task = new InsertCopyTask(getActivity(), copy, null);
+		task.execute((Void) null);
 	}
 	
 	private void updateCopiesView() {
@@ -115,8 +121,13 @@ public class AddCopyFragment extends Fragment implements OnClickListener {
 				copy.setMediaType(Copy.TYPE_DIGITAL);
 				break;
 			}
+			copy.setAdded(System.currentTimeMillis());
+			copy.setSynced(false);
 			copies.add(copy);
-			addCopy(copy);
+			
+			addCopyToDatabase(copy);
+			syncCopyWithServer(copy);
+			
 			updateCopiesView();
 			showViewContainer(VIEW_SHOW_COPIES);
 			break;

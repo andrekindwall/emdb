@@ -57,7 +57,7 @@ public class MovieTable extends AbstractTable implements BaseColumns {
 			+ COLUMN_ACTORS + " TEXT, "
 			+ COLUMN_PLOT + " TEXT, "
 			+ COLUMN_POSTER + " TEXT, "
-			+ COLUMN_RATING + " DOUBLE, "
+			+ COLUMN_RATING + " REAL, "
 			+ COLUMN_VOTES + " INTEGER, "
 			+ COLUMN_TYPE + " INTEGER"
 			+ ");";

@@ -2,6 +2,7 @@ package com.emjaay.mdb.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 
 public class UserData {
 	
@@ -32,6 +33,13 @@ public class UserData {
 	public static String getPassword(Context context){
 		SharedPreferences prefs = getSharedPreferences(context);
 		return prefs.getString(PREFS_PASSWORD, "");
+	}
+	
+	public static boolean userDataExists(Context context){
+		SharedPreferences prefs = getSharedPreferences(context);
+		String email = prefs.getString(PREFS_EMAIL, "");
+		String password =  prefs.getString(PREFS_PASSWORD, "");
+		return !(TextUtils.isEmpty(email) && TextUtils.isEmpty(password));
 	}
 	
 	public static void clearUserData(Context context){

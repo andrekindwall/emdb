@@ -58,6 +58,8 @@
     <string name="baseUrl">http://maria.pigvj.com</string>
     <string name="api_login">/login.php?email=%1$s&amp;password=%2$s</string>
     <string name="api_register">/registerUser.php?email=%1$s&amp;password=%2$s</string>
+    <string name="api_insertcopy">/insertMovieCopy.php?email=%1$s&amp;password=%2$s&amp;imdbID=%3$s&amp;mediaType=%4$d&amp;added=%5$d</string>
+    <!-- External api -->
     <string name="api_imdb_search">http://www.omdbapi.com/?s=%1$s&amp;y=%2$s</string>
     <string name="api_imdb_detailed_movie">http://www.omdbapi.com/?i=%1$s</string>
 

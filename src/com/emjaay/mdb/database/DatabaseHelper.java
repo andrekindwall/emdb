@@ -15,7 +15,7 @@ import com.emjaay.mdb.exception.DatabaseException;
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "emjaaymoviedb.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 5;
 	
 	public DatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,11 +38,68 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	    onCreate(db);
 	}
 	
+	public void clearCopies(){
+		SQLiteDatabase db = getWritableDatabase();
+		db.delete(CopyTable.TABLE_NAME, null, null);
+		db.close();
+	}
+	
 	public void insertCopy(Copy copy){
 		ContentValues values = CopyTable.populate(copy);
 		SQLiteDatabase db = getWritableDatabase();
 		db.insert(CopyTable.TABLE_NAME, null, values);
 		db.close();
+	}
+	
+	public void insertCopies(ArrayList<Copy> copies){
+		SQLiteDatabase db = getWritableDatabase();
+		db.beginTransaction();
+		for(Copy copy : copies){
+			ContentValues values = CopyTable.populate(copy);
+			db.insert(CopyTable.TABLE_NAME, null, values);
+		}
+		db.setTransactionSuccessful();
+		db.endTransaction();
+		db.close();
+	}
+	
+	public void updateCopy(Copy copy){
+		ContentValues values = CopyTable.populate(copy);
+		SQLiteDatabase db = getWritableDatabase();
+		db.update(CopyTable.TABLE_NAME, values, CopyTable.COLUMN_ADDED + "=" + copy.getAdded(), null);
+		db.close();
+	}
+	
+	public ArrayList<Copy> getUnsyncedCopies() {
+		ArrayList<Copy> copies = new ArrayList<Copy>();
+		String[] projection = CopyTable.PROJECTION_ALL;
+		String selection =  CopyTable.COLUMN_SYNCED + "=0";
+		
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(
+				CopyTable.TABLE_NAME, 	 	// The table to query
+				projection,                 // The columns to return
+				selection,                  // The columns for the WHERE clause
+				null,     					// The values for the WHERE clause
+				null,                       // don't group the rows
+				null,                       // don't filter by row groups
+				null 						// The sort order
+				);
+		
+		c.moveToFirst();
+		while(c.isAfterLast() == false){
+			try {
+				copies.add(CopyTable.toCopy(c));
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				return null;
+			}
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+		
+		return copies;
 	}
 	
 	public ArrayList<Copy> getCopies(String imdbId) {
@@ -53,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		SQLiteDatabase db = getReadableDatabase();
 		Cursor c = db.query(
-				CopyTable.TABLE_NAME,  	// The table to query
+				CopyTable.TABLE_NAME, 	 	// The table to query
 				projection,                 // The columns to return
 				selection,                  // The columns for the WHERE clause
 				selectionArgs,     			// The values for the WHERE clause

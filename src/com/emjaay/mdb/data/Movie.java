@@ -269,12 +269,12 @@ public class Movie implements Parcelable {
 		return movie;
 	}
 	
-	public static ArrayList<Movie> fromJson(JSONArray ja, boolean paramBoolean){
+	public static ArrayList<Movie> fromJson(JSONArray ja, boolean isDetailed){
 		ArrayList<Movie> movies = new ArrayList<Movie>();
 		try{
 			for(int i=0; i<ja.length(); i++){
 				JSONObject jo = ja.getJSONObject(i);
-				movies.add(fromJson(jo, paramBoolean));
+				movies.add(fromJson(jo, isDetailed));
 			}
 		}catch (JSONException e){
 			e.printStackTrace();
@@ -286,40 +286,40 @@ public class Movie implements Parcelable {
 		return 0;
 	}
 	
-	public void writeToParcel(Parcel paramParcel, int paramInt){
-		paramParcel.writeString(imdbId);
-		paramParcel.writeString(title);
-		paramParcel.writeString(rated);
-		paramParcel.writeString(released);
-		paramParcel.writeString(runtime);
-		paramParcel.writeString(genre);
-		paramParcel.writeString(director);
-		paramParcel.writeString(writer);
-		paramParcel.writeString(actors);
-		paramParcel.writeString(plot);
-		paramParcel.writeString(poster);
-		paramParcel.writeInt(year);
-		paramParcel.writeInt(type);
-		paramParcel.writeInt(votes);
-		paramParcel.writeFloat(rating);
+	public void writeToParcel(Parcel dest, int flags){
+		dest.writeString(imdbId);
+		dest.writeString(title);
+		dest.writeString(rated);
+		dest.writeString(released);
+		dest.writeString(runtime);
+		dest.writeString(genre);
+		dest.writeString(director);
+		dest.writeString(writer);
+		dest.writeString(actors);
+		dest.writeString(plot);
+		dest.writeString(poster);
+		dest.writeInt(year);
+		dest.writeInt(type);
+		dest.writeInt(votes);
+		dest.writeFloat(rating);
 	}
 	
-	private void readFromParcel(Parcel paramParcel){
-		imdbId = paramParcel.readString();
-		title = paramParcel.readString();
-		rated = paramParcel.readString();
-		released = paramParcel.readString();
-		runtime = paramParcel.readString();
-		genre = paramParcel.readString();
-		director = paramParcel.readString();
-		writer = paramParcel.readString();
-		actors = paramParcel.readString();
-		plot = paramParcel.readString();
-		poster = paramParcel.readString();
-		year = paramParcel.readInt();
-		type = paramParcel.readInt();
-		votes = paramParcel.readInt();
-		rating = paramParcel.readFloat();
+	private void readFromParcel(Parcel parcel){
+		imdbId = parcel.readString();
+		title = parcel.readString();
+		rated = parcel.readString();
+		released = parcel.readString();
+		runtime = parcel.readString();
+		genre = parcel.readString();
+		director = parcel.readString();
+		writer = parcel.readString();
+		actors = parcel.readString();
+		plot = parcel.readString();
+		poster = parcel.readString();
+		year = parcel.readInt();
+		type = parcel.readInt();
+		votes = parcel.readInt();
+		rating = parcel.readFloat();
 	}
 	
 	public static final Creator<Movie> CREATOR = new Creator<Movie>() {

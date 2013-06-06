@@ -1,5 +1,7 @@
 package com.emjaay.mdb;
 
+import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,9 +19,12 @@ import android.widget.Toast;
 
 import com.emjaay.mdb.communication.AbstractAsyncTask;
 import com.emjaay.mdb.communication.AbstractAsyncTask.CommunicationCallback;
+import com.emjaay.mdb.communication.InsertCopyTask;
 import com.emjaay.mdb.communication.LoginTask;
 import com.emjaay.mdb.communication.RegisterTask;
 import com.emjaay.mdb.communication.result.ApiResult;
+import com.emjaay.mdb.data.Copy;
+import com.emjaay.mdb.database.DatabaseHelper;
 import com.emjaay.mdb.util.UserData;
 import com.emjaay.mdb.util.Util;
 
@@ -81,10 +86,23 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 			}
 		});
 		
-		loginIfUserDataExists();
+		if(UserData.userDataExists(this)){
+			syncUnsyncedCopies();
+			loginWithCachedUserData();
+		}
 	}
 	
-	private void loginIfUserDataExists() {
+	private void syncUnsyncedCopies() {
+		DatabaseHelper database = new DatabaseHelper(this);
+		ArrayList<Copy> copies = database.getUnsyncedCopies();
+		
+		for(Copy copy : copies){
+			InsertCopyTask task = new InsertCopyTask(this, copy, null);
+			task.execute((Void) null);
+		}
+	}
+	
+	private void loginWithCachedUserData() {
 		mEmail = UserData.getEmail(this);
 		mPassword = UserData.getPassword(this);
 		

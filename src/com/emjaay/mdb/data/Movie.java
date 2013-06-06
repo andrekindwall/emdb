@@ -257,6 +257,7 @@ public class Movie implements Parcelable {
 					}
 				}
 				if (jo.has(API_VOTES)){
+					//Change from "123,456" to "123456" so it can be parsed as int
 					String votes = jo.getString(API_VOTES);
 					movie.setVotes(Integer.parseInt(votes.replace(",", "")));
 				}

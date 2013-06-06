@@ -152,5 +152,48 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		
 		return movies;
 	}
+	
+	public ArrayList<Movie> getMyMovies(int typeFilter) {
+		ArrayList<Movie> movies = new ArrayList<Movie>();
+		String[] projection = MovieTable.PROJECTION_ALL;
+		String sortOrder = MovieTable.COLUMN_TITLE + " ASC";
+		
+		String selection;
+		String[] selectionArgs;
+		String nestedSelect = "SELECT DISTINCT " + CopyTable.COLUMN_IMDB_ID + " FROM " + CopyTable.TABLE_NAME;
+		if(typeFilter == 0){
+			selection = MovieTable.COLUMN_IMDB_ID + " IN (" + nestedSelect + ")";
+			selectionArgs = null;
+		} else {
+			selection = MovieTable.COLUMN_IMDB_ID + " IN (" + nestedSelect + ") AND " + MovieTable.COLUMN_TYPE + "=?";
+			selectionArgs = new String[]{ Integer.toString(typeFilter) };
+		}
+		
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(
+				MovieTable.TABLE_NAME,  	// The table to query
+				projection,                 // The columns to return
+				selection,                  // The columns for the WHERE clause
+				selectionArgs,     			// The values for the WHERE clause
+				null,                       // don't group the rows
+				null,                       // don't filter by row groups
+				sortOrder                   // The sort order
+				);
+		
+		c.moveToFirst();
+		while(c.isAfterLast() == false){
+			try {
+				movies.add(MovieTable.toMovie(c));
+			} catch (DatabaseException e) {
+				e.printStackTrace();
+				return null;
+			}
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+		
+		return movies;
+	}
 
 }

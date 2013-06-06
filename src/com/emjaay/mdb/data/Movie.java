@@ -244,9 +244,6 @@ public class Movie implements Parcelable {
 				if (jo.has(API_RATING)){
 					movie.setRating((float)jo.getDouble(API_RATING));
 				}
-				if (jo.has(API_VOTES)){
-					movie.setVotes(jo.getInt(API_VOTES));
-				}
 				if (jo.has(API_TYPE)){
 					String type = jo.getString(API_TYPE);
 					if (type.equals(API_TYPE_MOVIE)){
@@ -258,6 +255,9 @@ public class Movie implements Parcelable {
 					if (type.equals(API_TYPE_EPISODE)){
 						movie.setType(TYPE_EPISODE);
 					}
+				}
+				if (jo.has(API_VOTES)){
+					movie.setVotes(jo.getInt(API_VOTES));
 				}
 			}
 		} catch (JSONException e){

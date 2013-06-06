@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
 		
 		DatabaseHelper database = new DatabaseHelper(getActivity());
 		
-		ArrayList<Movie> movies = database.getMovies(typeFilter);
+		ArrayList<Movie> movies = database.getMyMovies(typeFilter);
 		listAdapter.setItems(movies);
 		
 		updateViewVisibilities();
@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
 	public void updateMovies() {
 		if(listAdapter != null){
 			DatabaseHelper database = new DatabaseHelper(getActivity());
-			ArrayList<Movie> movies = database.getMovies(typeFilter);
+			ArrayList<Movie> movies = database.getMyMovies(typeFilter);
 			listAdapter.setItems(movies);
 			
 			updateViewVisibilities();

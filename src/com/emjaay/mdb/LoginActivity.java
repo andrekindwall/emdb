@@ -80,9 +80,22 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 				attemptLogin();
 			}
 		});
+		
+		loginIfUserDataExists();
 	}
-
-	public void attemptLogin() {
+	
+	private void loginIfUserDataExists() {
+		mEmail = UserData.getEmail(this);
+		mPassword = UserData.getPassword(this);
+		
+		if(TextUtils.isEmpty(mEmail) == false && TextUtils.isEmpty(mPassword) == false){
+			showProgress(true);
+			loginTask = new LoginTask(this, mEmail, mPassword, this);
+			loginTask.execute((Void) null);
+		}
+	}
+	
+	private void attemptLogin() {
 		if (loginTask != null) {
 			return;
 		}
@@ -241,7 +254,7 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 	@Override
 	public void taskComplete(AbstractAsyncTask task, ApiResult result) {
 		if(task == loginTask){
-			loginTask = null;			
+			loginTask = null;
 		} else if(task == registerTask){
 			registerTask = null;
 		}
@@ -262,6 +275,7 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 				showRegisterDialog();
 				break;
 			case ApiResult.ERROR_WRONG_PASSWORD:
+				UserData.setPassword(this, "");
 				mPasswordView.setError(getString(R.string.error_wrong_password));
 				mPasswordView.requestFocus();
 				break;

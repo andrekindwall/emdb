@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Maria</string>
+    <string name="app_name">emdb</string>
 
     <!-- Common -->
     <string name="cancel">Cancel</string>
@@ -17,7 +17,6 @@
     <string name="could_not_communicate">Problem contacting server</string>
 
     <!-- Login -->
-    <string name="title_login">Sign in</string>
     <string name="register">Register</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>

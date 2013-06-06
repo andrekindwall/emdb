@@ -257,7 +257,8 @@ public class Movie implements Parcelable {
 					}
 				}
 				if (jo.has(API_VOTES)){
-					movie.setVotes(jo.getInt(API_VOTES));
+					String votes = jo.getString(API_VOTES);
+					movie.setVotes(Integer.parseInt(votes.replace(",", "")));
 				}
 			}
 		} catch (JSONException e){

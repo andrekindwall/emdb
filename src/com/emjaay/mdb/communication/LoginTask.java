@@ -36,11 +36,12 @@ public class LoginTask extends AbstractAsyncTask {
 		
 		contactServer(url);
 		
+		updateCopies();
+		
 		return true;
 	}
 	
-	@Override
-	protected void onPostExecute(final Boolean success) {
+	private void updateCopies() {
 		if(result.isSuccess()){
 			DatabaseHelper database = new DatabaseHelper(context);
 			database.clearCopies();
@@ -55,7 +56,10 @@ public class LoginTask extends AbstractAsyncTask {
 				e.printStackTrace();
 			}
 		}
-		
+	}
+	
+	@Override
+	protected void onPostExecute(final Boolean success) {
 		if(callback != null){
 			Bundle bundle = new Bundle();
 			bundle.putString(EXTRA_EMAIL, email);

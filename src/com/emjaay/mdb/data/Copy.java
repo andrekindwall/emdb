@@ -79,6 +79,7 @@ public class Copy {
 			if (jo.has(API_ADDED)){
 				copy.setAdded(jo.getLong(API_ADDED));
 			}
+			copy.setSynced(true);
 		} catch (JSONException e){
 			e.printStackTrace();
 		}

@@ -74,7 +74,6 @@ public class AsyncImageView extends ImageView {
 			try {
 				URL url = new URL(mUrl);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setUseCaches(true);
 				InputStream in = connection.getInputStream();
 				Drawable drawable = Drawable.createFromStream(in, "src");
 				in.close();

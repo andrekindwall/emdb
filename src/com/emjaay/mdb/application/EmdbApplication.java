@@ -14,7 +14,10 @@ public class EmdbApplication extends Application {
 	}
 	
 	private void enableHttpResponseCache() {
-	    try {
+	    //Cache only works on HttpURLConnection
+		//
+		//Read more on http://developer.android.com/reference/android/net/http/HttpResponseCache.html
+		try {
 	        long httpCacheSize = 10 * 1024 * 1024; // 10 MiB
 	        File httpCacheDir = new File(getCacheDir(), "http");
 	        Class.forName("android.net.http.HttpResponseCache")

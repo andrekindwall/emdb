@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.emjaay.mdb.R;
 import com.emjaay.mdb.data.Movie;
 import com.emjaay.mdb.database.DatabaseHelper;
+import com.emjaay.mdb.views.AsyncImageView;
 
 public class DetailedMovieFragment extends Fragment {
 
@@ -31,6 +32,7 @@ public class DetailedMovieFragment extends Fragment {
 	private TextView ratingView;
 	private TextView votesView;
 	private TextView typeView;
+	private AsyncImageView imageView;
 	
 	public DetailedMovieFragment() {
 	}
@@ -53,6 +55,7 @@ public class DetailedMovieFragment extends Fragment {
 		ratingView = (TextView) rootView.findViewById(R.id.rating);
 		votesView = (TextView) rootView.findViewById(R.id.votes);
 		typeView = (TextView) rootView.findViewById(R.id.type);
+		imageView = (AsyncImageView) rootView.findViewById(R.id.image);
 		
 		getExtras();
 		
@@ -92,6 +95,7 @@ public class DetailedMovieFragment extends Fragment {
 			ratingView.setText(Float.toString(movie.getRating()));
 			votesView.setText(Integer.toString(movie.getVotes()));
 			typeView.setText(movie.getTypeName(getActivity()));
+			imageView.setImageUrl(movie.getPoster());
 		}
 	}
 

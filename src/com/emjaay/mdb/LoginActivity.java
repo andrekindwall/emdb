@@ -9,10 +9,12 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,13 +24,17 @@ import com.emjaay.mdb.communication.AbstractAsyncTask.CommunicationCallback;
 import com.emjaay.mdb.communication.InsertCopyTask;
 import com.emjaay.mdb.communication.LoginTask;
 import com.emjaay.mdb.communication.RegisterTask;
+import com.emjaay.mdb.communication.TaskQueue;
+import com.emjaay.mdb.communication.TaskQueue.TaskQueueCallback;
+import com.emjaay.mdb.communication.imdb.ImdbDetailedMovieTask;
 import com.emjaay.mdb.communication.result.ApiResult;
 import com.emjaay.mdb.data.Copy;
 import com.emjaay.mdb.database.DatabaseHelper;
+import com.emjaay.mdb.exception.TaskException;
 import com.emjaay.mdb.util.UserData;
 import com.emjaay.mdb.util.Util;
 
-public class LoginActivity extends AbstractFragmentActivity implements CommunicationCallback {
+public class LoginActivity extends AbstractFragmentActivity implements CommunicationCallback, TaskQueueCallback {
 
 	private static final int MIN_PASSWORD_LENGTH = 4;
 	
@@ -42,6 +48,7 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 	// UI references.
 	private EditText mEmailView;
 	private EditText mPasswordView;
+	private Button mSignInButton;
 	private EditText mRegisterPasswordView1;
 	private EditText mRegisterPasswordView2;
 	
@@ -75,11 +82,13 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 			}
 		});
 		
+		mSignInButton = (Button) findViewById(R.id.sign_in_button);
+		
 		if(mEmail.length() > 0){
 			mPasswordView.requestFocus();
 		}
 
-		findViewById(R.id.sign_in_button).setOnClickListener(new View.OnClickListener() {
+		mSignInButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				attemptLogin();
@@ -268,6 +277,20 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 			}
 		});
 	}
+	
+	@Override
+	protected void showProgress(boolean show) {
+		super.showProgress(show);
+		mEmailView.setEnabled(!show);
+		mPasswordView.setEnabled(!show);
+		mSignInButton.setEnabled(!show);
+	}
+	
+	private void goToNextActivity() {
+		Intent intent = new Intent(this, HomeActivity.class);
+		startActivity(intent);
+		finish();
+	}
 
 	@Override
 	public void taskComplete(AbstractAsyncTask task, ApiResult result) {
@@ -284,9 +307,29 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 			UserData.setEmail(this, email);
 			UserData.setPassword(this, hashedPassword);
 			
-			Intent intent = new Intent(this, HomeActivity.class);
-			startActivity(intent);
-			finish();
+			DatabaseHelper database = new DatabaseHelper(this);
+			ArrayList<String> missingMovies = database.getMissingMovies();
+			
+			if(missingMovies.size() > 0){
+				TaskQueue taskQueue = new TaskQueue();
+				taskQueue.setTaskQueueCallback(this);
+				for(String imdbID : missingMovies){
+					ImdbDetailedMovieTask queueTask = new ImdbDetailedMovieTask(this, imdbID, null);
+					try {
+						taskQueue.addTask(queueTask);
+					} catch (TaskException e) {
+						e.printStackTrace();
+					}
+				}
+				showProgress(true);
+				try {
+					taskQueue.execute();
+				} catch (TaskException e) {
+					e.printStackTrace();
+				}
+			} else {
+				goToNextActivity();
+			}
 		} else {
 			switch(result.getErrorCode()){
 			case ApiResult.ERROR_EMAIL_DONT_EXISTS:
@@ -316,5 +359,16 @@ public class LoginActivity extends AbstractFragmentActivity implements Communica
 			registerTask = null;
 		}
 		showProgress(false);
+	}
+
+	@Override
+	public void taskQueueProgress(int current, int queueSize) {
+		Log.d("emjaay", "taskQueue " + current + " of " + queueSize);
+	}
+
+	@Override
+	public void taskQueueFinished() {
+		showProgress(false);
+		goToNextActivity();
 	}
 }

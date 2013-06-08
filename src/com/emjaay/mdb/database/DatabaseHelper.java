@@ -70,6 +70,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.close();
 	}
 	
+	/**
+	 * Get all the imdbID's that exists in table 'copies' but not in table 'movies'
+	 * 
+	 * @return A list of all the missing imdbID's
+	 */
+	public ArrayList<String> getMissingMovies() {
+		ArrayList<String> ids = new ArrayList<String>();
+		String[] projection = new String[]{ CopyTable.COLUMN_IMDB_ID };
+		
+		String nestedSelect = "SELECT " + MovieTable.COLUMN_IMDB_ID + " FROM " + MovieTable.TABLE_NAME;
+		String selection = CopyTable.COLUMN_IMDB_ID + " NOT IN (" + nestedSelect + ")";
+		
+		SQLiteDatabase db = getReadableDatabase();
+		Cursor c = db.query(
+				CopyTable.TABLE_NAME,  		// The table to query
+				projection,                 // The columns to return
+				selection,                  // The columns for the WHERE clause
+				null,     					// The values for the WHERE clause
+				null,                       // don't group the rows
+				null,                       // don't filter by row groups
+				null                 		// The sort order
+				);
+		
+		c.moveToFirst();
+		while(c.isAfterLast() == false){
+			ids.add(c.getString(0));
+			c.moveToNext();
+		}
+		c.close();
+		db.close();
+		
+		return ids;
+	}
+	
 	public ArrayList<Copy> getUnsyncedCopies() {
 		ArrayList<Copy> copies = new ArrayList<Copy>();
 		String[] projection = CopyTable.PROJECTION_ALL;

@@ -2,9 +2,6 @@ package com.emjaay.mdb;
 
 import java.util.Locale;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,7 +27,7 @@ public class DetailedMovieActivity extends AbstractFragmentActivity implements C
 	private DetailedMoviePagerAdapter mPagerAdapter;
 	private ViewPager mViewPager;
 	
-	private String imdbId;
+	private String imdbID;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +38,10 @@ public class DetailedMovieActivity extends AbstractFragmentActivity implements C
 		mViewPager = (ViewPager) findViewById(R.id.pager);
 		mViewPager.setAdapter(mPagerAdapter);
 		
-		imdbId = getIntent().getStringExtra(EXTRAS_IMDB_ID);
+		imdbID = getIntent().getStringExtra(EXTRAS_IMDB_ID);
 		
 		showProgress(true);
-		movieTask = new ImdbDetailedMovieTask(this, imdbId, this);
+		movieTask = new ImdbDetailedMovieTask(this, imdbID, this);
 		movieTask.execute((Void) null);
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
@@ -74,13 +71,13 @@ public class DetailedMovieActivity extends AbstractFragmentActivity implements C
 			case 0:
 				fragment = new DetailedMovieFragment();
 				args = new Bundle();
-				args.putString(DetailedMovieFragment.EXTRAS_IMDB_ID, imdbId);
+				args.putString(DetailedMovieFragment.EXTRAS_IMDB_ID, imdbID);
 				fragment.setArguments(args);
 				return fragment;
 			case 1:
 				fragment = new AddCopyFragment();
 				args = new Bundle();
-				args.putString(DetailedMovieFragment.EXTRAS_IMDB_ID, imdbId);
+				args.putString(DetailedMovieFragment.EXTRAS_IMDB_ID, imdbID);
 				fragment.setArguments(args);
 				return fragment;
 			}
@@ -111,19 +108,13 @@ public class DetailedMovieActivity extends AbstractFragmentActivity implements C
 		movieTask = null;
 		showProgress(false);
 		
-		if(result.isSuccess()){			
-			try {
-				JSONObject jo = new JSONObject(result.getResponse());
-				Movie movie = Movie.fromJson(jo, true);
-				DetailedMovieFragment fragment = (DetailedMovieFragment) mPagerAdapter.getActiveFragment(mViewPager, 0);
-				if(fragment != null){
-					fragment.setMovie(movie);
-				}
-				
+		if(result.isSuccess()){	
+			DetailedMovieFragment fragment = (DetailedMovieFragment) mPagerAdapter.getActiveFragment(mViewPager, 0);
+			if(fragment != null){
+				String imdbID = result.getBundle().getString(ImdbDetailedMovieTask.EXTRA_IMDB_ID);
 				DatabaseHelper database = new DatabaseHelper(this);
-				database.insertMovie(movie, true);
-			} catch (JSONException e) {
-				e.printStackTrace();
+				Movie movie = database.getMovie(imdbID);
+				fragment.setMovie(movie);
 			}
 		}
 	}

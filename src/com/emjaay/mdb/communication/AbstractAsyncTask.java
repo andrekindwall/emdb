@@ -37,8 +37,12 @@ public abstract class AbstractAsyncTask extends AsyncTask<Void, Void, Boolean> {
 		return context.getString(R.string.baseUrl);
 	}
 	
-	public void setCommunicationListener(CommunicationCallback callback) {
+	public void setCommunicationCallback(CommunicationCallback callback) {
 		this.callback = callback;
+	}
+	
+	public CommunicationCallback getCommunicationCallback(){
+		return callback;
 	}
 	
 	/**
